@@ -1,21 +1,69 @@
 import React from "react"
-import { Link } from "gatsby"
-
 import Layout from "../components/layout"
-import Image from "../components/image"
 import SEO from "../components/seo"
+import PostPreview from "../components/postPreview"
+import { graphql, Link } from "gatsby"
+import { Grid } from "@material-ui/core"
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
-
-export default IndexPage
+const Blog = ({ data, pageContext: { numPages, currentPage } }) => {
+  return (
+    <Layout>
+      <SEO title="Blog" />
+      <h1>Bài viết mới nhất</h1>
+      <Grid container>
+        <Grid item style={{ marginBottom: `1.4rem` }}>
+          {data.allMarkdownRemark.edges.map(
+            ({ node: { frontmatter, excerpt, fields } }, index) => (
+              <div key={index}>
+                <PostPreview
+                  title={frontmatter.title}
+                  date={frontmatter.date}
+                  excerpt={excerpt}
+                  slug={fields.slug}
+                />
+              </div>
+            )
+          )}
+        </Grid>
+        <Grid item container direction={"row"} justify={"space-between"}>
+          {currentPage === 1 ? (
+            <p>Prev</p>
+          ) : currentPage === 2 ? (
+            <Link to={`/blog`}>Prev</Link>
+          ) : (
+            <Link to={`/blog/${currentPage - 1}`}>Prev</Link>
+          )}
+          {currentPage}
+          {currentPage === numPages ? (
+            <p>Next</p>
+          ) : (
+            <Link to={`/blog/${currentPage + 1}`}>Next</Link>
+          )}
+        </Grid>
+      </Grid>
+    </Layout>
+  )
+}
+export default Blog
+export const query = graphql`
+  query blogListQuery($skip: Int!, $limit: Int!) {
+    allMarkdownRemark(
+      sort: { order: DESC, fields: frontmatter___date }
+      limit: $limit
+      skip: $skip
+    ) {
+      edges {
+        node {
+          frontmatter {
+            title
+            date(formatString: "DD/MM/YYYY")
+          }
+          excerpt
+          fields {
+            slug
+          }
+        }
+      }
+    }
+  }
+`

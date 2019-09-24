@@ -7,41 +7,40 @@
 
 import React from "react"
 import PropTypes from "prop-types"
-import { useStaticQuery, graphql } from "gatsby"
-
-import Header from "./header"
+import { Grid } from "@material-ui/core"
+import Menu from "./menu"
 import "./layout.css"
 
 const Layout = ({ children }) => {
-  const data = useStaticQuery(graphql`
-    query SiteTitleQuery {
-      site {
-        siteMetadata {
-          title
-        }
-      }
-    }
-  `)
-
   return (
-    <>
-      <Header siteTitle={data.site.siteMetadata.title} />
-      <div
-        style={{
-          margin: `0 auto`,
-          maxWidth: 960,
-          padding: `0px 1.0875rem 1.45rem`,
-          paddingTop: 0,
-        }}
-      >
-        <main>{children}</main>
-        <footer>
-          © {new Date().getFullYear()}, Built with
-          {` `}
-          <a href="https://www.gatsbyjs.org">Gatsby</a>
-        </footer>
-      </div>
-    </>
+    <div
+      style={{
+        margin: `0 auto`,
+        maxWidth: 960,
+        paddingTop: 10,
+      }}
+    >
+      <Grid container>
+        <Grid
+          item
+          md={4}
+          style={{ padding: "20px", borderRight: "0.5px solid black" }}
+        >
+          <img
+            alt="Vu Pham"
+            src="https://c.ndtvimg.com/2019-07/2t829hlo_govinda-twitter_625x300_31_July_19.jpg"
+          />
+          <span className="title">Blog của Tiger</span>
+          <br />
+          <p className="description">Lập Trình và Cuộc Sống</p>
+          <Menu />
+          <footer>© Vu Pham {new Date().getFullYear()}</footer>
+        </Grid>
+        <Grid item md={6} style={{ padding: "20px" }}>
+          <main>{children}</main>
+        </Grid>
+      </Grid>
+    </div>
   )
 }
 
