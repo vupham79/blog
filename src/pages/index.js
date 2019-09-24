@@ -5,7 +5,7 @@ import PostPreview from "../components/postPreview"
 import { graphql, Link } from "gatsby"
 import { Grid } from "@material-ui/core"
 
-const Blog = ({ data, pageContext: { numPages, currentPage } }) => {
+export default ({ data, pageContext: { numPages, currentPage } }) => {
   return (
     <Layout>
       <SEO title="Blog" />
@@ -44,9 +44,9 @@ const Blog = ({ data, pageContext: { numPages, currentPage } }) => {
     </Layout>
   )
 }
-export default Blog
+
 export const query = graphql`
-  query blogListQuery($skip: Int!, $limit: Int!) {
+  query blogListQuery($skip: Int, $limit: Int) {
     allMarkdownRemark(
       sort: { order: DESC, fields: frontmatter___date }
       limit: $limit
